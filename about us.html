@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Digital Library</title>
+    <style>
+        /* GENERAL STYLES */
+        body {
+            background-color: #121212; /* Dark background */
+            color: #f5f5f5; /* Light text */
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        h2 {
+            color: #ff5722; /* Accent color */
+            font-size: 36px;
+            margin-top: 50px;
+        }
+
+        h3 {
+            color: #ffa040;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #ddd;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        /* CONTAINER */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        /* CARD STYLES */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .card {
+            background-color: #1e1e1e;
+            padding: 30px;
+            border-radius: 15px;
+            width: 350px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(255,87,34,0.5);
+        }
+
+        /* RESPONSIVE */
+        @media(max-width: 800px){
+            .card-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ABOUT US -->
+    <div class="container">
+        <h2>About Us</h2>
+        <p>Digital Library is dedicated to providing free access to a vast collection of books and resources for readers of all ages.  
+        We aim to empower individuals by giving them the tools to gain new knowledge and develop valuable skills in a modern digital space.</p>
+
+        <div class="card-container">
+            <div class="card">
+                <h3>Our Mission</h3>
+                <p>Our mission is to make knowledge accessible to everyone by offering a user-friendly digital platform filled with books across genres and disciplines.  
+                We believe learning should be free, enjoyable, and limitless.</p>
+            </div>
+            <div class="card">
+                <h3>Our Vision</h3>
+                <p>Our vision is to become the leading digital library where learners and readers worldwide can easily explore, read, and grow.  
+                We aspire to create a community where knowledge knows no boundaries.</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

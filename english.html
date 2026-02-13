@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Books Library</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* --- CSS VARIABLES & RESET (MATCHING MATH THEME) --- */
+:root {
+    --bg-deep: #0f172a;       /* Same Deep Blue/Black */
+    --bg-surface: #1e293b;    /* Same Dark Navy */
+    --primary: #38bdf8;       /* Cyan/Blue */
+    --secondary: #818cf8;     /* Indigo */
+    --accent: #2dd4bf;        /* Teal */
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --shadow-lg: 0 10px 40px -10px rgba(0,0,0,0.5);
+    --card-hover-transform: translateY(-8px);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-deep);
+    color: var(--text-main);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* --- BACKGROUND ANIMATION CANVAS --- */
+#english-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+}
+
+/* --- HERO SECTION --- */
+.hero {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 100px 20px 50px;
+    position: relative;
+}
+
+.hero h1 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+    text-shadow: 0 10px 30px rgba(56, 189, 248, 0.2);
+    animation: fadeInDown 1s ease-out;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-bottom: 40px;
+    animation: fadeInUp 1s ease-out 0.3s backwards;
+}
+
+/* --- NAVIGATION --- */
+nav {
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 60px;
+    padding: 10px;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 50px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: var(--shadow-lg);
+    animation: fadeInUp 1s ease-out 0.6s backwards;
+    flex-wrap: wrap;
+}
+
+nav a {
+    padding: 12px 28px;
+    border-radius: 30px;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+nav a:hover, nav a.active {
+    color: var(--bg-deep);
+    background: var(--primary);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+    transform: scale(1.05);
+}
+
+/* --- MAIN CONTAINER --- */
+main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px 100px;
+}
+
+/* --- SECTION STYLING --- */
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 40px;
+    margin-top: 80px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--glass-border);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease;
+}
+
+.section-title.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.section-title span {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--text-main), var(--text-muted));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.section-title h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+}
+
+/* --- BOOK GRID --- */
+.books {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+/* --- BOOK CARD --- */
+.book {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 25px;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: all 0.4s ease;
+    transform-style: preserve-3d;
+    opacity: 0;
+    transform: translateY(30px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.book.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.book:hover {
+    transform: translateY(-10px) rotateX(2deg);
+    border-color: rgba(56, 189, 248, 0.3);
+    box-shadow: 0 20px 50px -12px rgba(56, 189, 248, 0.15);
+    background: rgba(30, 41, 59, 0.9);
+}
+
+/* Decorative background icon */
+.book::before {
+    content: attr(data-icon);
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-size: 10rem;
+    opacity: 0.03;
+    transform: rotate(-15deg);
+    font-family: 'JetBrains Mono', monospace;
+    pointer-events: none;
+    transition: all 0.5s ease;
+}
+
+.book:hover::before {
+    opacity: 0.06;
+    top: -30px;
+    right: -30px;
+}
+
+.book-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--text-main);
+    position: relative;
+    z-index: 1;
+    min-height: 60px; /* Align buttons */
+}
+
+/* --- BUTTONS --- */
+.book a, .btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(56, 189, 248, 0.05));
+    border: 1px solid var(--glass-border);
+    color: var(--primary);
+    transition: all 0.3s ease;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.book a:hover {
+    background: var(--primary);
+    color: var(--bg-deep);
+    box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+}
+
+/* --- FOOTER --- */
+footer {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(15, 23, 42, 0.9);
+    border-top: 1px solid var(--glass-border);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 50px;
+}
+
+footer span {
+    color: var(--primary);
+}
+
+/* --- ANIMATION KEYFRAMES --- */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    .hero h1 { font-size: 2.5rem; }
+    nav { width: 90%; flex-wrap: wrap; top: 10px; }
+    .books { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Background Animation Canvas -->
+<canvas id="english-canvas"></canvas>
+
+<section class="hero">
+    <h1>📚 English Books Library</h1>
+    <p>Extensive collection of Free English Books • Grammar, Literature, & Vocabulary</p>
+</section>
+
+<!-- NAVIGATION -->
+<nav>
+    <a href="#grammar">Grammar & Writing</a>
+    <a href="#literature">Classic Literature</a>
+    <a href="#vocabulary">Vocabulary</a>
+    <a href="#exams">Exam Prep</a>
+</nav>
+
+<main>
+
+<!-- GRAMMAR & WRITING -->
+<div class="section-title" id="grammar">
+    <span>✍️</span>
+    <h2>Grammar & Writing</h2>
+</div>
+<div class="books grammar">
+    <div class="book" data-icon="G">
+        <div class="book-title">The Elements of Style (Strunk & White)</div>
+        <a href="https://www.gutenberg.org/files/37134/37134-h/37134-h.htm" target="_blank">📖 Read Online</a>
+    </div>
+    <div class="book" data-icon="B">
+        <div class="book-title">The Blue Book of Grammar</div>
+        <a href="https://www.grammarbook.com/" target="_blank">📘 Visit Site</a>
+    </div>
+    <div class="book" data-icon="W">
+        <div class="book-title">Writing for Success (OpenStax)</div>
+        <a href="https://openstax.org/details/books/writing-for-success" target="_blank">📝 Read PDF</a>
+    </div>
+    <div class="book" data-icon="E">
+        <div class="book-title">English Grammar 101</div>
+        <a href="https://www.englishgrammar101.com/" target="_blank">🧠 Learn Online</a>
+    </div>
+    <div class="book" data-icon="O">
+        <div class="book-title">On Writing Well (William Zinsser)</div>
+        <a href="https://archive.org/details/onwritingwell00zins" target="_blank">📖 Read Online</a>
+    </div>
+    <div class="book" data-icon="A">
+        <div class="book-title">A Grammar of the English Tongue</div>
+        <a href="https://www.gutenberg.org/ebooks/14706" target="_blank">📖 Read eBook</a>
+    </div>
+</div>
+
+<!-- LITERATURE -->
+<div class="section-title" id="literature">
+    <span>📖</span>
+    <h2>Classic Literature (Public Domain)</h2>
+</div>
+<div class="books literature">
+    <div class="book" data-icon="P">
+        <div class="book-title">Pride and Prejudice (Jane Austen)</div>
+        <a href="https://www.gutenberg.org/files/1342/1342-h/1342-h.htm" target="_blank">📖 Read Online</a>
+    </div>
+    <div class="book" data-icon="1984">
+        <div class="book-title">1984 (George Orwell)</div>
+        <a href="https://www.gutenberg.org/files/7370/7370-h/7370-h.htm" target="_blank">📖 Read Online</a>
+    </div>
+    <div class="book" data-icon="G">
+        <div class="book-title">The Great Gatsby (F. Scott Fitzgerald)</div>
+        <a href="https://www.gutenberg.org/files/64317/64317-h/64317-h.htm" target="_blank">📖 Read Online</a>
+    </div>
+    <div class="book" data-icon="S">
+        <div class="book-title">Sherlock Holmes (Arthur Conan Doyle)</div>
+        <a href="https://www.gutenberg.org/files/1661/1661-h/1661-h.htm" target="_blank">🔍 Read Online</a>
+    </div>
+    <div class="book" data-icon="A">
+        <div class="book-title">Alice's Adventures in Wonderland</div>
+        <a href="https://www.gutenberg.org/files/11/11-h/11-h.htm" target="_blank">🐇 Read Online</a>
+    </div>
+    <div class="book" data-icon="D">
+        <div class="book-title">The Great Divorce (C.S. Lewis)</div>
+        <a href="https://www.gutenberg.org/files/1308/1308-h/1308-h.htm" target="_blank">👻 Read Online</a>
+    </div>
+</div>
+
+<!-- VOCABULARY -->
+<div class="section-title" id="vocabulary">
+    <span>🧠</span>
+    <h2>Vocabulary & Reference</h2>
+</div>
+<div class="books vocabulary">
+    <div class="book" data-icon="W">
+        <div class="book-title">Word Power Made Easy (Norman Lewis)</div>
+        <a href="https://archive.org/details/WordPowerMadeEasyNormanLewis" target="_blank">📖 Read Online</a>
+    </div>
+    <div class="book" data-icon="R">
+        <div class="book-title">Roget's Thesaurus</div>
+        <a href="https://www.gutenberg.org/files/10681/10681-h/10681-h.htm" target="_blank">📖 Read Online</a>
+    </div>
+    <div class="book" data-icon="V">
+        <div class="book-title">Vocabulary for the College Bound</div>
+        <a href="https://www.barronseduc.com/vocab-college-bound-1438007685" target="_blank">📘 View Details</a>
+    </div>
+    <div class="book" data-icon="F">
+        <div class="book-title">Fowler's Modern English Usage</div>
+        <a href="https://www.gutenberg.org/ebooks/52955" target="_blank">📖 Read eBook</a>
+    </div>
+</div>
+
+<!-- EXAM PREP -->
+<div class="section-title" id="exams">
+    <span>📝</span>
+    <h2>Exam Preparation (TOEFL, IELTS, SAT)</h2>
+</div>
+<div class="books exams">
+    <div class="book" data-icon="T">
+        <div class="book-title">Official TOEFL iBT Tests</div>
+        <a href="https://www.ets.org/toefl" target="_blank">📘 Official Site</a>
+    </div>
+    <div class="book" data-icon="I">
+        <div class="book-title">IELTS Official Guide</div>
+        <a href="https://www.ielts.org/" target="_blank">📘 Official Site</a>
+    </div>
+    <div class="book" data-icon="S">
+        <div class="book-title">SAT Practice Tests (Khan Academy)</div>
+        <a href="https://satsuite.collegeboard.org/sat/practice" target="_blank">📝 Practice Free</a>
+    </div>
+    <div class="book" data-icon="G">
+        <div class="book-title">GRE Preparation Materials</div>
+        <a href="https://www.ets.org/gre" target="_blank">📝 Official Site</a>
+    </div>
+</div>
+
+</main>
+
+<footer>
+    © 2026 <span>English Books Library</span> | Master the Language Free
+</footer>
+
+<script>
+    /**
+     * ANIMATION ENGINE
+     * Symbols are English letters and punctuation marks.
+     */
+    
+    const canvas = document.getElementById('english-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    let particles = [];
+
+    // English Alphabet and Punctuation
+    const symbols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', '.', ',', '?', '!', '&', ';'];
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+        constructor() {
+            this.reset();
+            this.y = Math.random() * height;
+        }
+
+        reset() {
+            this.x = Math.random() * width;
+            this.y = height + 50;
+            this.speed = 0.5 + Math.random() * 1.5;
+            this.symbol = symbols[Math.floor(Math.random() * symbols.length)];
+            this.size = 14 + Math.random() * 20;
+            this.opacity = 0.05 + Math.random() * 0.15;
+            this.drift = (Math.random() - 0.5) * 0.5;
+        }
+
+        update() {
+            this.y -= this.speed;
+            this.x += this.drift;
+
+            if (this.y < -50) {
+                this.reset();
+            }
+        }
+
+        draw() {
+            ctx.font = `${this.size}px 'JetBrains Mono'`;
+            ctx.fillStyle = `rgba(148, 163, 184, ${this.opacity})`; 
+            ctx.fillText(this.symbol, this.x, this.y);
+        }
+    }
+
+    function initParticles() {
+        particles = [];
+        const particleCount = Math.min(window.innerWidth / 12, 80); // More particles for a "Matrix-lite" feel
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+        requestAnimationFrame(animate);
+    }
+
+    function setupScrollAnimations() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        const elementsToAnimate = document.querySelectorAll('.section-title, .book');
+        elementsToAnimate.forEach(el => observer.observe(el));
+    }
+
+    window.addEventListener('resize', () => {
+        resize();
+        initParticles();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        resize();
+        initParticles();
+        animate();
+        setupScrollAnimations();
+    });
+
+</script>
+</body>
+</html>

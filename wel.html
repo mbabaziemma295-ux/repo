@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Library</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+               url('book.jpg') no-repeat center center/cover;
+    text-align:center;
+    color:white;
+}
+
+/* Glass Container */
+.container{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(15px);
+    padding:60px 40px;
+    border-radius:20px;
+    width:90%;
+    max-width:600px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.5);
+    animation:fadeIn 1.2s ease-in-out;
+}
+
+/* Title */
+h1{
+    font-size:3rem;
+    font-weight:700;
+    background:linear-gradient(45deg,tomato,orange);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin-bottom:15px;
+    letter-spacing:2px;
+}
+
+/* Paragraph */
+p{
+    font-size:18px;
+    color:#ddd;
+    margin-bottom:40px;
+}
+
+/* Button */
+.btn{
+    display:inline-block;
+    padding:14px 35px;
+    font-size:18px;
+    font-weight:600;
+    color:white;
+    text-decoration:none;
+    border-radius:50px;
+    background:linear-gradient(45deg,tomato,orange);
+    transition:0.4s;
+    box-shadow:0 10px 20px rgba(255,99,71,0.4);
+}
+
+.btn:hover{
+    transform:translateY(-5px);
+    box-shadow:0 15px 25px rgba(255,99,71,0.6);
+    background:linear-gradient(45deg,orange,tomato);
+}
+
+/* Animation */
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(30px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+/* Responsive */
+@media(max-width:600px){
+    h1{font-size:2.2rem;}
+    .container{padding:40px 20px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>DIGITAL LIBRARY</h1>
+    <p>Welcome to our modern digital library system.  
+    Discover books, explore knowledge, and grow your skills easily.</p>
+    
+    <a href="signin.html" class="btn">Welcome</a>
+</div>
+
+</body>
+</html>
